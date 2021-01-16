@@ -20,7 +20,7 @@ export default {
       value: 0
     },
     {
-      label: 'PBFT 当前视图',
+      label: '当前承诺池中承诺个数',
       route: '',
       class: 'bg-89c3f8 margin-top-15  margin-left-15',
       value: 0
