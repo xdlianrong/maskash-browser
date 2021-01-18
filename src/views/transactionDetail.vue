@@ -9,11 +9,91 @@
       <div class="container">
         <div class="content">
           <el-tabs v-model="activeName" >
-            <el-tab-pane label="交易信息" name="first">
-              <div class="tranbox">
-                <div v-for="item in transactionData" class="hash-content-label" :key='item.label'>
-                  <span class="label-title">{{item.label}}:</span>
-                  <span>{{item.value}}</span>
+            <el-tab-pane :label="transactionName" name="first">
+              <div v-if="ID">
+                <div class="tranbox">
+                  <div v-for="item in transactionData" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+              </div>
+              <div v-else>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(0, 2).concat(transactionData.slice(-2, end))" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>接收方和发送方地址公钥的承诺与加密字段</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(2, 8)" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>接收方地址公钥相等证明字段</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(8, 13)" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>发送方地址公钥相等证明字段</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(13, 18)" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>发送，找零，被花费金额的承诺与加密字段</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(18, 24).concat(transactionData.slice(32, 35))" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>发送和找零金额的承诺格式相等证明字段</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(24, 30)" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>接收方公钥加密的发送金额字段</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(30, 32)" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>被花费承诺相等证明字段</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(35, 40)" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>会计平衡证明字段</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(40, 46)" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>发送出的承诺CMS的随机数，接收方公钥加密密文</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(46, 48)" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
+                </div>
+                <span style='margin:20px;'>找零承诺CMR的随机数，发送方公钥加密密文</span>
+                <div class="tranbox">
+                  <div v-for="item in transactionData.slice(48, 50)" class="hash-content-label" :key='item.label'>
+                    <span class="label-title">{{item.label}}:</span>
+                    <span>{{item.value}}</span>
+                  </div>
                 </div>
               </div>
             </el-tab-pane>
@@ -184,6 +264,7 @@ export default {
   },
   data: function () {
     return {
+      ID: null,
       PkHash: this.$route.query.pkHash,
       transactionByPkHash: '',
       transactionReceiptByPkHash: '',
@@ -191,8 +272,11 @@ export default {
       noDataTransaction: false,
       contractList: [],
       groupId: localStorage.getItem('groupId'),
-      transactionData: constant.TRANSACTION_ITEM_DATA,
+      transactionData: [],
+      transactionBuyData: constant.TRANSACTION_BUY_ITEM_DATA,
+      transactionTranferData: constant.TRANSACTION_TRANSFER_ITEM_DATA,
       activeName: 'first',
+      transactionName: '交易信息',
       receiptData: constant.RECEIPT_ITEM_DATA,
       byteCode: null,
       transactionTo: null,
@@ -225,10 +309,19 @@ export default {
         if (res.data.result) {
           this.noDataTransaction = false
           this.transactionByPkHash = res.data.result
-          if (res.data.result) {
-            this.transactionData.forEach(val => {
+          this.ID = parseInt(res.data.result.ID)
+          if (res.data.result.ID === '0x1') {
+            this.transactionBuyData.forEach(val => {
               val.value = this.transactionByPkHash[val.label]
             })
+            this.transactionName = '购币交易信息'
+            this.transactionData = this.transactionBuyData
+          } else if (res.data.result.ID === '0x0') {
+            this.transactionTranferData.forEach(val => {
+              val.value = this.transactionByPkHash[val.label]
+            })
+            this.transactionName = '转账交易信息'
+            this.transactionData = this.transactionTranferData
           }
           this.searchTbTransactionReceiptByPkHash()
         } else {
