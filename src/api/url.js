@@ -25,6 +25,12 @@ export function reviseParam (data = [], type) {
     case 4:
       baseJson.method = 'eth_getTransactionReceipt'
       break
+    case 5:
+      baseJson.method = 'eth_getCMState'
+      break
+    case 6:
+      baseJson.method = 'txpool_status'
+      break
     default:
       return baseJson
   }

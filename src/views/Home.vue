@@ -11,6 +11,7 @@
             </li>
           </ul>
         </div>
+        <div id="myChart2" style="width:50%;height:278px;float:right;"></div>
       </div>
       <div class="home-foot">
         <!--Block list-->
@@ -53,7 +54,7 @@
           </div>
           <div class="home-foot-box-content" >
             <ul>
-              <li class="item" v-for="item in transactionsList" :key='item.hash'>
+              <li class="item" v-for="item in transactionsList[0]" :key='item.hash'>
                 <div class="left">
                   <div>交易</div>
                   <div class="transaction" @click="goPage( 'transactionDetail','pkHash',item.hash)">
@@ -82,7 +83,7 @@
 import common from '@/common'
 import router from '@/router'
 import constant from '@/util/constant'
-import { getBlockByNumber, getTransactionsCount } from '@/api/api'
+import { getBlockByNumber, getTransactionsCount, getTransactionsForFourteenDays, getCMCount, getTxpoolPending } from '@/api/api'
 import '@/assets/css/layout.css'
 import '@/assets/css/public.css'
 
@@ -90,21 +91,123 @@ export default {
   name: 'Home',
   data () {
     return {
+      myChart2: '',
       blocks: [],
       transactionsList: [],
-      maxBlocks: 100, // 该页面最大显示区块数
+      maxBlocks: 15, // 该页面最大显示区块数
       blockNumber: 0, // 最新区块区块高度
       web3: common.web3,
-      totalStatisticsList: constant.TOTAL_STATISTICS_LIST
+      totalStatisticsList: constant.TOTAL_STATISTICS_LIST,
+      chartStatistics: {
+        date: [],
+        dataArr: []
+      }
     }
   },
   mounted: function () {
     this.$nextTick(function () {
       this.searchTbBlockInfo()
       this.searchTbTransactionsCountInfo()
+      this.searchTbCMCountInfo()
+      this.searchTbPendingCountInfo()
     })
   },
   methods: {
+    drawLine () {
+      // 基于准备好的dom，初始化echarts实例
+      this.myChart2 = this.$echarts.init(document.getElementById('myChart2'), 'shine')
+      // 绘制图表
+      const fontColor = '#4c9bfd'
+      this.myChart2.setOption({
+        title: {
+          text: '近14天交易数量', // 主标题
+          subtext: '', // 副标题
+          x: 'center', // x轴方向对齐方式
+          textStyle: {
+            color: fontColor
+          }
+        },
+        tooltip: {
+          // 鼠标悬停提示内容
+          trigger: 'axis', // 触发类型，默认数据触发，可选为：'axis' item
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: 'line', // 默认为直线，可选为：'line' | 'shadow'
+            label: 'cross',
+            show: true
+          }
+        },
+        legend: {
+          orient: 'vertical',
+          x: 'right',
+          y: 'top',
+          textStyle: {
+            color: fontColor
+          },
+          data: ['交易数量']
+        },
+        xAxis: {
+          type: 'category',
+          data: this.chartStatistics.date, // x轴数据
+          name: '日期', // x轴名称
+          axisLabel: { // x轴间隔和倾斜度
+            interval: 2,
+            color: '#4c9bfd',
+            rotate: 30
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#4c9bfd',
+              width: 1
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          name: '交易数', // y轴名称
+          minInterval: 1,
+          axisLabel: {
+            color: '#4c9bfd'
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#4c9bfd',
+              width: 1
+            }
+          },
+          splitLine: {
+            lineStyle: {
+              color: 'rgba(0, 240, 255, 0.3)'
+            }
+          }
+        },
+        series: [
+          {
+            name: '交易数量',
+            data: this.chartStatistics.dataArr,
+            symbol: 'circle',
+            symbolSize: 5,
+            type: 'line',
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#00FF00'
+                },
+                areaStyle: {
+                  color: new this.$echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+                    offset: 0,
+                    color: 'rgba(7,44,90,0.3)'
+                  }, {
+                    offset: 1,
+                    color: 'rgba(0,212,199,0.9)'
+                  }])
+                }
+              }
+            }
+          }
+        ]
+      })
+    },
     format: function (time, format) {
       const t = new Date(time)
       const tf = function (i) {
@@ -131,6 +234,18 @@ export default {
       const time = parseInt(block.timestamp, 16) * 1000
       block.timestamp = this.format(time, 'yyyy-MM-dd HH:mm:ss')
     },
+    searchTbBlockInfo: function () {
+      this.web3.eth.getBlockNumber()
+        .then((result) => {
+          this.blockNumber = result
+          this.totalStatisticsList[0].value = result
+          if (this.maxBlocks > result) {
+            this.maxBlocks = result + 1
+          }
+          this.searchBlocksInfo()
+          this.searchTransactionsForFourteenDays()
+        })
+    },
     searchBlocksInfo: function () {
       const promiseArray = []
       for (let i = 0; i < this.maxBlocks; i++) {
@@ -140,27 +255,44 @@ export default {
         for (let i = 0; i < this.maxBlocks; i++) {
           this.blocks.push(res[i].data.result)
           this.timeTransport(this.blocks[i])
-          // TODO:后续添加对transactionList中的交易进行排序，按照时间顺序
-          this.transactionsList = this.transactionsList.concat(res[i].data.result.transactions)
+          // TODO:后续添加对transactionList中的交易进行排序，按照时间顺序;或由后端完成
+          // this.transactionsList = this.transactionsList.concat(res[i].data.result.transactions)
         }
       })
-    },
-    searchTbBlockInfo: function () {
-      this.web3.eth.getBlockNumber()
-        .then((result) => {
-          console.log(result)
-          this.blockNumber = result
-          this.totalStatisticsList[0].value = result
-          if (this.maxBlocks > result) {
-            this.maxBlocks = result + 1
-          }
-          this.searchBlocksInfo()
-        })
     },
     searchTbTransactionsCountInfo: function () {
       getTransactionsCount()
         .then((res) => {
           this.totalStatisticsList[1].value = parseInt(res.data.result)
+        })
+    },
+    searchTbPendingCountInfo: function () {
+      getTxpoolPending()
+        .then((res) => {
+          this.totalStatisticsList[2].value = parseInt(res.data.result.pending)
+        })
+    },
+    searchTbCMCountInfo: function () {
+      getCMCount()
+        .then((res) => {
+          this.totalStatisticsList[3].value = parseInt(res.data.result.invalid) + parseInt(res.data.result.valid)
+        })
+    },
+    searchTransactionsForFourteenDays: function () {
+      getTransactionsForFourteenDays(this.blockNumber)
+        .then((res) => {
+          // res返回前14天每天的交易量
+          this.transactionsList = res.TransactionsList
+          for (let i = 0; i < this.transactionsList.length; i++) {
+            if (this.transactionsList[i]) {
+              this.chartStatistics.dataArr[this.transactionsList.length - i - 1] = this.transactionsList[i].length
+            } else {
+              this.chartStatistics.dataArr[this.transactionsList.length - i - 1] = 0
+            }
+            const time = res.NowDay - i * 24 * 60 * 60
+            this.chartStatistics.date[this.transactionsList.length - i - 1] = this.format(time * 1000, 'MM-dd')
+          }
+          this.drawLine()
         })
     },
     goPage: function (name, label, data) {

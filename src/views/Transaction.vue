@@ -1,7 +1,7 @@
 <template>
-  <div class="search-main" style="height: auto;">
-    <div class="container">
-      <v-nav :hrTitle="title" :hrcontent="title" :route="'transaction'"></v-nav>
+<!--  <div class="search-main" style="height: auto;">-->
+    <div class="transaction">
+<!--      <v-nav :hrTitle="title" :hrcontent="title" :route="'transaction'"></v-nav>-->
       <div class="search-nav">
         <div class="hashInput">
           <el-input placeholder="请输入交易哈希或块高" v-model="searchKeyValue" class="input-with-select">
@@ -46,10 +46,10 @@
         </div>
       </div>
     </div>
-  </div>
+<!--  </div>-->
 </template>
 <script type="es6">
-import nav from '@/components/content-nav'
+// import nav from '@/components/content-nav'
 import { getBlockByNumber, getTbTransactionInfo } from '@/api/api'
 import router from '@/router'
 
@@ -59,9 +59,9 @@ import common from '@/common'
 
 export default {
   name: 'transaction',
-  components: {
-    'v-nav': nav
-  },
+  // components: {
+  //   'v-nav': nav
+  // },
   data: function () {
     return {
       web3: common.web3,

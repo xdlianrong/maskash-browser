@@ -8,6 +8,17 @@
         </el-input>
       </div>
     </div>
+    <div class="search-pagation">
+      <el-pagination style="display: inline-block"
+                     layout="sizes,prev, pager, next"
+                     :total="pagination.total"
+                     @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page.sync="pagination.currentPage"
+                     :page-sizes="[10, 20, 30, 50]"
+                     :page-size="pagination.pageSize">
+      </el-pagination>
+    </div>
     <!--搜索结果，默认显示全部区块，按高度从高到到低排序-->
     <div class="search-table">
       <el-table :data="blockList"
@@ -38,6 +49,15 @@
           <span>查询结果 : </span>
           <span>共计{{pagination.total}}条数据</span>
         </div>
+<!--        <el-pagination style="display: inline-block"-->
+<!--                       layout="sizes,prev, pager, next"-->
+<!--                       :total="pagination.total"-->
+<!--                       @size-change="handleSizeChange"-->
+<!--                       @current-change="handleCurrentChange"-->
+<!--                       :current-page.sync="pagination.currentPage"-->
+<!--                       :page-sizes="[10, 20, 30, 50]"-->
+<!--                       :page-size="pagination.pageSize">-->
+<!--        </el-pagination>-->
       </div>
     </div>
   </div>
@@ -55,15 +75,15 @@ export default {
   data () {
     return {
       input: '',
-      hashData: this.$route.query.blockData || '',
+      hashData: null,
       blockNumber: null,
       pagination: {
         currentPage: this.$route.query.pageNumber || 1,
-        pageSize: this.$route.query.pageSize || 10,
+        pageSize: this.$route.query.pageSize || 20,
         total: 0
       },
       web3: common.web3,
-      maxBlocks: 50,
+      maxBlocks: 0,
       totalBlockNumber: 0,
       blockList: [],
       submitDisabled: false,
@@ -131,7 +151,6 @@ export default {
         getBlockByNumber(parseInt(this.input).toString(16))
           .then((res) => {
             this.pagination.total = 1
-            console.log(res.data.result)
             this.blockList = []
             this.blockList.push(res.data.result)
             for (let i = 0; i < this.blockList.length; i++) {
@@ -146,16 +165,20 @@ export default {
         .then((result) => {
           this.pagination.total = result
           this.totalBlockNumber = result
-          if (this.maxBlocks > result) {
-            this.maxBlocks = result + 1
-          }
           this.searchBlocksInfo()
         })
     },
     searchBlocksInfo: function () {
+      this.maxBlocks = this.pagination.pageSize
+      const pageSize = this.pagination.pageSize
+      const currentPage = this.pagination.currentPage
+      if (this.maxBlocks > this.totalBlockNumber - pageSize * (currentPage - 1)) {
+        this.maxBlocks = this.totalBlockNumber - pageSize * (currentPage - 1) + 1
+      }
       const promiseArray = []
+      this.blockList = []
       for (let i = 0; i < this.maxBlocks; i++) {
-        promiseArray.push(getBlockByNumber((this.totalBlockNumber - i).toString(16)))
+        promiseArray.push(getBlockByNumber((this.totalBlockNumber - i - pageSize * (currentPage - 1)).toString(16)))
       }
       Promise.all(promiseArray).then((res) => {
         for (let i = 0; i < this.maxBlocks; i++) {
@@ -173,6 +196,30 @@ export default {
         path.query[label] = data
       }
       router.push(path)
+    },
+    handleSizeChange (val) {
+      this.pagination.pageSize = val
+      this.maxBlocks = this.pagination.pageSize
+      this.pagination.currentPage = 1
+      router.push({
+        // name: "block",
+        query: {
+          pageSize: this.pagination.pageSize,
+          pageNumber: this.pagination.currentPage
+        }
+      })
+      this.searchBlocksInfo()
+    },
+    handleCurrentChange (val) {
+      this.pagination.currentPage = val
+      router.push({
+        // name: "block",
+        query: {
+          pageSize: this.pagination.pageSize,
+          pageNumber: this.pagination.currentPage
+        }
+      })
+      this.searchBlocksInfo()
     }
   }
 }

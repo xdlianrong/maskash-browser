@@ -44,7 +44,7 @@ export default {
       blockContent: '',
       noData: false,
       page: {
-        pageSize: this.$route.query.pageSize || 10,
+        pageSize: this.$route.query.pageSize || 20,
         pageNumber: this.$route.query.pageNumber || 1
       }
     }

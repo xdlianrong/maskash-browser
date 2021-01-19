@@ -247,13 +247,13 @@ export default {
       label: 'evsc2',
       value: null
     }, {
+      label: 'cms',
+      value: null
+    }, {
       label: 'evrc1',
       value: null
     }, {
       label: 'evrc2',
-      value: null
-    }, {
-      label: 'cms',
       value: null
     }, {
       label: 'cmr',
