@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="logo">
-      <img style="width: 170px;" @click='link' src="@/assets/images/fisco-bcos-logo.png" class="image">
+      <img style="width: 170px;" @click='link' src="@/assets/images/logo_2.png" class="image">
     </div>
     <router-view/>
   </div>
