@@ -20,7 +20,7 @@ npm run build
 直接点击dist中的index.html启动。（因暂未添加修改端口功能，通过index进入浏览器的geth端口默认为8545）
 
 ```javascript
-// 保存文件
+// 保存文件,供后续使用
 save: function (data, filename) {
       if (!data) {
         console.error('Console.save: No data')
