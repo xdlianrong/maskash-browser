@@ -67,6 +67,14 @@ export function getTxpoolPending () {
   })
 }
 
+export function getTransactionsForFourteenDays2 () {
+  const data2 = reviseParam([], 7)
+  return post({
+    method: 'post',
+    data: data2
+  })
+}
+
 export function getTbTransactionInfo (blockHeight, transactionHash) {
   // 输入只有区块高度时，将该区块的所有交易显示出来
   if (transactionHash) {

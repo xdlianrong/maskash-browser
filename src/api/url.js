@@ -31,6 +31,9 @@ export function reviseParam (data = [], type) {
     case 6:
       baseJson.method = 'txpool_status'
       break
+    case 7:
+      baseJson.method = 'eth_getTotalTransactions'
+      break
     default:
       return baseJson
   }

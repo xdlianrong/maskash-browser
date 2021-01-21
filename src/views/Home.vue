@@ -11,7 +11,9 @@
             </li>
           </ul>
         </div>
-        <div id="myChart2" style="width:50%;height:278px;float:right;"></div>
+        <div id="myChart2" style="width:50%;height:278px;float:right;" v-loading="loading"
+             element-loading-text="数据加载中..."
+             element-loading-background="rgba(0, 0, 0, 0.8)"></div>
       </div>
       <div class="home-foot">
         <!--Block list-->
@@ -52,7 +54,9 @@
               <span @click="goPage('transaction')" class="table-link" style="padding-right: 30px">更多 ></span>
             </div>
           </div>
-          <div class="home-foot-box-content" >
+          <div class="home-foot-box-content" v-loading="loading"
+               element-loading-text="数据加载中..."
+               element-loading-background="rgba(0, 0, 0, 0.8)">
             <ul>
               <li class="item" v-for="item in transactionsList[0]" :key='item.hash'>
                 <div class="left">
@@ -78,12 +82,10 @@
 
 <script>
 // @ is an alias to /src
-// 局部注册组件
-// import HelloWorld from '@/components/HelloWorld.vue'
 import common from '@/common'
 import router from '@/router'
 import constant from '@/util/constant'
-import { getBlockByNumber, getTransactionsCount, getTransactionsForFourteenDays, getCMCount, getTxpoolPending } from '@/api/api'
+import { getBlockByNumber, getTransactionsCount, getTransactionsForFourteenDays2, getCMCount, getTxpoolPending } from '@/api/api'
 import '@/assets/css/layout.css'
 import '@/assets/css/public.css'
 
@@ -101,7 +103,8 @@ export default {
       chartStatistics: {
         date: [],
         dataArr: []
-      }
+      },
+      loading: false
     }
   },
   mounted: function () {
@@ -279,17 +282,21 @@ export default {
         })
     },
     searchTransactionsForFourteenDays: function () {
-      getTransactionsForFourteenDays(this.blockNumber)
+      this.loading = true
+      getTransactionsForFourteenDays2()
         .then((res) => {
           // res返回前14天每天的交易量
-          this.transactionsList = res.TransactionsList
+          this.transactionsList = res.data.result
+          this.loading = false
           for (let i = 0; i < this.transactionsList.length; i++) {
             if (this.transactionsList[i]) {
               this.chartStatistics.dataArr[this.transactionsList.length - i - 1] = this.transactionsList[i].length
             } else {
               this.chartStatistics.dataArr[this.transactionsList.length - i - 1] = 0
             }
-            const time = res.NowDay - i * 24 * 60 * 60
+            const NowTime = new Date()
+            const NowDay = Math.floor(NowTime.getTime() / 1000)
+            const time = NowDay - i * 24 * 60 * 60
             this.chartStatistics.date[this.transactionsList.length - i - 1] = this.format(time * 1000, 'MM-dd')
           }
           this.drawLine()
