@@ -259,7 +259,6 @@ export default {
           this.blocks.push(res[i].data.result)
           this.timeTransport(this.blocks[i])
           // TODO:后续添加对transactionList中的交易进行排序，按照时间顺序;或由后端完成
-          // this.transactionsList = this.transactionsList.concat(res[i].data.result.transactions)
         }
       })
     },
