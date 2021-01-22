@@ -70,7 +70,6 @@ export default {
       title: '交易',
       transactionData: this.$route.query.transactionData || '',
       blockHeight: this.$route.query.blockHeight || '',
-      // transactionTime: months,
       transactionList: [],
       pagination: {
         currentPage: this.$route.query.pageNumber || 1,

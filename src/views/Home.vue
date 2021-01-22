@@ -74,7 +74,6 @@
           </div>
         </div>
       </div>
-
     <router-view/>
     </div>
   </div>
@@ -298,6 +297,11 @@ export default {
             const time = NowDay - i * 24 * 60 * 60
             this.chartStatistics.date[this.transactionsList.length - i - 1] = this.format(time * 1000, 'MM-dd')
           }
+          this.drawLine()
+        }).catch((err) => {
+          console.log(err)
+          this.loading = false
+          this.transactionsList = []
           this.drawLine()
         })
     },
