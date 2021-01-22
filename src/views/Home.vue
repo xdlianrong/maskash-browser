@@ -301,7 +301,13 @@ export default {
         }).catch((err) => {
           console.log(err)
           this.loading = false
-          this.transactionsList = []
+          this.transactionsList = new Array(14)
+          for (let i = 0; i < this.transactionsList.length; i++) {
+            const NowTime = new Date()
+            const NowDay = Math.floor(NowTime.getTime() / 1000)
+            const time = NowDay - i * 24 * 60 * 60
+            this.chartStatistics.date[this.transactionsList.length - i - 1] = this.format(time * 1000, 'MM-dd')
+          }
           this.drawLine()
         })
     },
