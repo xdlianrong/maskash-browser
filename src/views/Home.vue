@@ -256,6 +256,7 @@ export default {
       this.web3.eth.getBlockNumber()
         .then((result) => {
           this.setSetIntervaling = true
+          this.blocks = []
           this.blockNumber = result
           this.totalStatisticsList[0].value = result
           if (this.maxBlocks > result) {
