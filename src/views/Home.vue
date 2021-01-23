@@ -103,6 +103,14 @@ export default {
         date: [],
         dataArr: []
       },
+      setInterval: {
+        timer1: null,
+        timer2: null,
+        timer3: null,
+        timer4: null,
+        timer5: null
+      },
+      setSetIntervaling: false,
       loading: false
     }
   },
@@ -113,6 +121,14 @@ export default {
       this.searchTbCMCountInfo()
       this.searchTbPendingCountInfo()
     })
+  },
+  beforeDestroy: function () {
+    this.clear()
+  },
+  watch: {
+    setSetIntervaling: function () {
+      this.setSetInterval()
+    }
   },
   methods: {
     drawLine () {
@@ -239,6 +255,7 @@ export default {
     searchTbBlockInfo: function () {
       this.web3.eth.getBlockNumber()
         .then((result) => {
+          this.setSetIntervaling = true
           this.blockNumber = result
           this.totalStatisticsList[0].value = result
           if (this.maxBlocks > result) {
@@ -310,6 +327,19 @@ export default {
           }
           this.drawLine()
         })
+    },
+    setSetInterval: function () {
+      this.setInterval.timer1 = window.setInterval(() => { this.searchTbBlockInfo() }, constant.INTERVALTIME)
+      this.setInterval.timer2 = window.setInterval(() => { this.searchTbTransactionsCountInfo() }, constant.INTERVALTIME)
+      this.setInterval.timer3 = window.setInterval(() => { this.searchTbCMCountInfo() }, constant.INTERVALTIME)
+      this.setInterval.timer4 = window.setInterval(() => { this.searchTbPendingCountInfo() }, constant.INTERVALTIME)
+    },
+    // clear timer
+    clear: function () {
+      window.clearInterval(this.setInterval.timer1)
+      window.clearInterval(this.setInterval.timer2)
+      window.clearInterval(this.setInterval.timer3)
+      window.clearInterval(this.setInterval.timer4)
     },
     goPage: function (name, label, data) {
       const path = {}
