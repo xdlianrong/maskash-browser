@@ -19,7 +19,7 @@ export default {
 }
 </script>
 <style>
-#app {
+html, body, #app {
   background-color: #2a2c3b;
   font-size: 14px;
   height: 100%;
