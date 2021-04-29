@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <div class="logo">
-      <img style="width: 170px;" @click='link' src="@/assets/images/logo_2.png" class="image">
+    <div class="logo" >
+      <img style="width: 170px;" src="@/assets/images/logo_2.png" class="image">
     </div>
     <router-view/>
   </div>
@@ -37,12 +37,6 @@ html, body, #app {
 }
 .nav-header .logo {
   display: inline-block;
-  float: left;
-  cursor: pointer;
-}
-.nav-header .image {
-  display: inline;
-  padding-top: 20px;
   cursor: pointer;
 }
 .nav-chainType {
