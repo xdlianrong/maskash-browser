@@ -211,34 +211,52 @@ export default {
       label: 'cmspk',
       value: null
     }, {
-      label: 'erpkeps0',
+      label: 'rpkepg1',
       value: null
     }, {
-      label: 'erpkeps1',
+      label: 'rpkepg2',
       value: null
     }, {
-      label: 'erpkeps2',
+      label: 'rpkepy1',
       value: null
     }, {
-      label: 'erpkeps3',
+      label: 'rpkepy2',
       value: null
     }, {
-      label: 'erpkept',
+      label: 'rpkept1',
       value: null
     }, {
-      label: 'espkeps0',
+      label: 'rpkept2',
       value: null
     }, {
-      label: 'espkeps1',
+      label: 'rpkeps',
       value: null
     }, {
-      label: 'espkeps2',
+      label: 'rpkepc',
       value: null
     }, {
-      label: 'espkeps3',
+      label: 'spkepg1',
       value: null
     }, {
-      label: 'espkept',
+      label: 'spkepg2',
+      value: null
+    }, {
+      label: 'spkepy1',
+      value: null
+    }, {
+      label: 'spkepy2',
+      value: null
+    }, {
+      label: 'spkept1',
+      value: null
+    }, {
+      label: 'spkept2',
+      value: null
+    }, {
+      label: 'spkeps',
+      value: null
+    }, {
+      label: 'spkepc',
       value: null
     }, {
       label: 'evsc1',
@@ -259,22 +277,52 @@ export default {
       label: 'cmr',
       value: null
     }, {
-      label: 'cmsfpc',
+      label: 'rcmfpg1',
       value: null
     }, {
-      label: 'cmsfpz1',
+      label: 'rcmfpg2',
       value: null
     }, {
-      label: 'cmsfpz2',
+      label: 'rcmfpy1',
       value: null
     }, {
-      label: 'cmrfpc',
+      label: 'rcmfpy2',
       value: null
     }, {
-      label: 'cmrfpz1',
+      label: 'rcmfpt1',
       value: null
     }, {
-      label: 'cmrfpz2',
+      label: 'rcmfpt2',
+      value: null
+    }, {
+      label: 'rcmfps',
+      value: null
+    }, {
+      label: 'rcmfpc',
+      value: null
+    }, {
+      label: 'scmfpg1',
+      value: null
+    }, {
+      label: 'scmfpg2',
+      value: null
+    }, {
+      label: 'scmfpy1',
+      value: null
+    }, {
+      label: 'scmfpy2',
+      value: null
+    }, {
+      label: 'scmfpt1',
+      value: null
+    }, {
+      label: 'scmfpt2',
+      value: null
+    }, {
+      label: 'scmfps',
+      value: null
+    }, {
+      label: 'scmfpc',
       value: null
     }, {
       label: 'evsbsc1',
@@ -292,37 +340,46 @@ export default {
       label: 'cmo',
       value: null
     }, {
-      label: 'evoeps0',
+      label: 'voepg1',
       value: null
     }, {
-      label: 'evoeps1',
+      label: 'voepg2',
       value: null
     }, {
-      label: 'evoeps2',
+      label: 'voepy1',
       value: null
     }, {
-      label: 'evoeps3',
+      label: 'voepy2',
       value: null
     }, {
-      label: 'evoept',
+      label: 'voept1',
+      value: null
+    }, {
+      label: 'voept2',
+      value: null
+    }, {
+      label: 'voeps',
+      value: null
+    }, {
+      label: 'voepc',
+      value: null
+    }, {
+      label: 'bpy',
+      value: null
+    }, {
+      label: 'bpt',
+      value: null
+    }, {
+      label: 'bpsn1',
+      value: null
+    }, {
+      label: 'bpsn2',
+      value: null
+    }, {
+      label: 'bpsn3',
       value: null
     }, {
       label: 'bpc',
-      value: null
-    }, {
-      label: 'bprv',
-      value: null
-    }, {
-      label: 'bprr',
-      value: null
-    }, {
-      label: 'bpsv',
-      value: null
-    }, {
-      label: 'bpsr',
-      value: null
-    }, {
-      label: 'bpsor',
       value: null
     }, {
       label: 'cmsrc1',

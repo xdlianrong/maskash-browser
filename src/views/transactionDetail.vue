@@ -34,63 +34,63 @@
                 </div>
                 <span style='margin:20px;'>接收方地址公钥相等证明字段</span>
                 <div class="tranbox">
-                  <div v-for="item in transactionData.slice(8, 13)" class="hash-content-label" :key='item.label'>
+                  <div v-for="item in transactionData.slice(8, 16)" class="hash-content-label" :key='item.label'>
                     <span class="label-title">{{item.label}}:</span>
                     <span>{{item.value}}</span>
                   </div>
                 </div>
                 <span style='margin:20px;'>发送方地址公钥相等证明字段</span>
                 <div class="tranbox">
-                  <div v-for="item in transactionData.slice(13, 18)" class="hash-content-label" :key='item.label'>
+                  <div v-for="item in transactionData.slice(16, 24)" class="hash-content-label" :key='item.label'>
                     <span class="label-title">{{item.label}}:</span>
                     <span>{{item.value}}</span>
                   </div>
                 </div>
                 <span style='margin:20px;'>发送，找零，被花费金额的承诺与加密字段</span>
                 <div class="tranbox">
-                  <div v-for="item in transactionData.slice(18, 24).concat(transactionData.slice(32, 35))" class="hash-content-label" :key='item.label'>
+                  <div v-for="item in transactionData.slice(24, 30).concat(transactionData.slice(48, 51))" class="hash-content-label" :key='item.label'>
                     <span class="label-title">{{item.label}}:</span>
                     <span>{{item.value}}</span>
                   </div>
                 </div>
                 <span style='margin:20px;'>发送和找零金额的承诺格式相等证明字段</span>
                 <div class="tranbox">
-                  <div v-for="item in transactionData.slice(24, 30)" class="hash-content-label" :key='item.label'>
+                  <div v-for="item in transactionData.slice(30, 46)" class="hash-content-label" :key='item.label'>
                     <span class="label-title">{{item.label}}:</span>
                     <span>{{item.value}}</span>
                   </div>
                 </div>
                 <span style='margin:20px;'>接收方公钥加密的发送金额字段</span>
                 <div class="tranbox">
-                  <div v-for="item in transactionData.slice(30, 32)" class="hash-content-label" :key='item.label'>
+                  <div v-for="item in transactionData.slice(46, 48)" class="hash-content-label" :key='item.label'>
                     <span class="label-title">{{item.label}}:</span>
                     <span>{{item.value}}</span>
                   </div>
                 </div>
                 <span style='margin:20px;'>被花费承诺相等证明字段</span>
                 <div class="tranbox">
-                  <div v-for="item in transactionData.slice(35, 40)" class="hash-content-label" :key='item.label'>
+                  <div v-for="item in transactionData.slice(51, 59)" class="hash-content-label" :key='item.label'>
                     <span class="label-title">{{item.label}}:</span>
                     <span>{{item.value}}</span>
                   </div>
                 </div>
                 <span style='margin:20px;'>会计平衡证明字段</span>
                 <div class="tranbox">
-                  <div v-for="item in transactionData.slice(40, 46)" class="hash-content-label" :key='item.label'>
+                  <div v-for="item in transactionData.slice(59, 65)" class="hash-content-label" :key='item.label'>
                     <span class="label-title">{{item.label}}:</span>
                     <span>{{item.value}}</span>
                   </div>
                 </div>
                 <span style='margin:20px;'>发送出的承诺CMS的随机数，接收方公钥加密密文</span>
                 <div class="tranbox">
-                  <div v-for="item in transactionData.slice(46, 48)" class="hash-content-label" :key='item.label'>
+                  <div v-for="item in transactionData.slice(65, 67)" class="hash-content-label" :key='item.label'>
                     <span class="label-title">{{item.label}}:</span>
                     <span>{{item.value}}</span>
                   </div>
                 </div>
                 <span style='margin:20px;'>找零承诺CMR的随机数，发送方公钥加密密文</span>
                 <div class="tranbox">
-                  <div v-for="item in transactionData.slice(48, 50)" class="hash-content-label" :key='item.label'>
+                  <div v-for="item in transactionData.slice(67, 69)" class="hash-content-label" :key='item.label'>
                     <span class="label-title">{{item.label}}:</span>
                     <span>{{item.value}}</span>
                   </div>
