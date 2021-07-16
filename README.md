@@ -19,4 +19,6 @@ npm run build
 
 直接点击dist中的index.html启动。（因暂未添加修改端口功能，通过index进入浏览器的geth端口默认为8545）
 
-
+> ERROR Error: vue-loader requires @vue/compiler-sfc to be present in the dependency tree.
+> 
+> 解决办法:npm i -D vue-loader@14
